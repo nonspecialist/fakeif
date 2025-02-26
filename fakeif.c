@@ -55,35 +55,38 @@ int ioctl(int fd, unsigned long request, unsigned long arg) {
 	if (i < 0)
 		return i;
 
-	if (request == SIOCGIFHWADDR) {
+	if (request != SIOCGIFHWADDR)
+		return i;
+
+	if (debug)
+		fprintf(stderr, "SIOCGIFHWADDR intercepted\n");
+
+	struct ifreq *req=(struct ifreq *)arg;
+	sprintf(var, "HWADDR_%.*s", IFNAMSIZ, req->ifr_name);
+
+	hwtxt = getenv(var);
+	if (hwtxt == NULL) {
 		if (debug)
-			fprintf(stderr, "SIOCGIFHWADDR intercepted\n");
-		struct ifreq *req=(struct ifreq *)arg;
-		sprintf(var, "HWADDR_%.*s", IFNAMSIZ, req->ifr_name);
-		if ((hwtxt=getenv(var)) != NULL) {
-			if (debug)
-				fprintf(stderr, "Old MAC address %s\n", straddr(req->ifr_ifru.ifru_hwaddr.sa_data));
-
-			fprintf(stderr, "Replacing original address %s of %s with %s\n", straddr(req->ifr_ifru.ifru_hwaddr.sa_data), req->ifr_name, hwtxt);
-
-			char new_addr[6];
-			if (6 != sscanf(hwtxt, "%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx%*c",
-						&new_addr[0], &new_addr[1], &new_addr[2],
-						&new_addr[3], &new_addr[4], &new_addr[5])) {
-				fprintf(stderr, "Invalid MAC address %s\n", hwtxt);
-				return i;
-			}
-			memcpy(&req->ifr_ifru.ifru_hwaddr.sa_data, new_addr, 6);
-			if (debug)
-				fprintf(stderr, "New MAC address %s\n", straddr(req->ifr_ifru.ifru_hwaddr.sa_data));
-		} else {
-			if (debug)
-				fprintf(stderr, "No override for %s\n", req->ifr_name);
-		}
+			fprintf(stderr, "No override defined for interface %s\n", req->ifr_name);
+		return i;
 	}
 
 	if (debug)
-		fprintf(stderr, "ioctl hooked: returns %d\n", i);
+		fprintf(stderr, "Old MAC address %s\n", straddr(req->ifr_ifru.ifru_hwaddr.sa_data));
+
+	fprintf(stderr, "Replacing original address %s of %s with %s\n", straddr(req->ifr_ifru.ifru_hwaddr.sa_data), req->ifr_name, hwtxt);
+
+	char new_addr[6];
+	if (6 != sscanf(hwtxt, "%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx%*c",
+				&new_addr[0], &new_addr[1], &new_addr[2],
+				&new_addr[3], &new_addr[4], &new_addr[5])) {
+		fprintf(stderr, "Invalid MAC address %s\n", hwtxt);
+		return i;
+	}
+	memcpy(&req->ifr_ifru.ifru_hwaddr.sa_data, new_addr, 6);
+
+	if (debug)
+		fprintf(stderr, "New MAC address %s\n", straddr(req->ifr_ifru.ifru_hwaddr.sa_data));
 
 	return i;
 }
