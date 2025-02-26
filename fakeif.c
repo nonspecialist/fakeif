@@ -31,12 +31,14 @@ void do_redirect() {
 
 char *straddr(char *hwaddr) {
 	char *text = malloc(IFHWADDRLEN*3*sizeof(char));
+
 	for (int byte=0; byte<IFHWADDRLEN; byte++) {
 		char octet[4]; // includes null terminator
 		sprintf(octet, "%02x:", hwaddr[byte] & 0xff);
 		strncpy(&text[byte*3], octet, 3); // exclude the terminating null
 	}
 	text[IFHWADDRLEN*3-1] = '\0'; // replace the last colon with the terminating null
+
 	return text;
 }
 
