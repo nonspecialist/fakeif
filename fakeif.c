@@ -52,6 +52,8 @@ int ioctl(int fd, unsigned long request, unsigned long arg) {
 	// actually make the call so we have valid values and only overwrite
 	// the hwaddr in the response
 	i = lib_ioctl(fd, request, arg);
+	if (i < 0)
+		return i;
 
 	if (request == SIOCGIFHWADDR) {
 		if (debug)
