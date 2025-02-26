@@ -54,6 +54,13 @@ SIOCGIFHWADDR intercepted
 ...
 ```
 
+Inspiration
+===========
+
+* [fakehostname](https://github.com/nonspecialist/fakehostname) my original for dealing with the `gethostname` call
+* [Peter Benie's fakeif](http://www.chiark.greenend.org.uk/~peterb/linux/fakeif/)
+* [Daniel Hall](https://github.com/@smarthall) for asking me why I needed to be mucking about in `libudev` at all
+
 License
 =======
 
