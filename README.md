@@ -9,12 +9,11 @@ How do I use it?
 
 * build the shared library (`make`) or the RPM (`make rpm`)
 * install it somewhere (`make install`) or (`rpm -ivh .../path/to/new-rpm`)
-* either:
-  * set the installed shared library to be loaded prior to libc
-    (`export LD_PRELOAD=/path/to/shared/library.so.1`)
-  * set the environment variable `HWADDR_<interface-name>` to whatever MAC address
-    you want (note this MUST conform to the format `xx:xx:xx:xx:xx:xx`)
-  * run your application normally
+* set the installed shared library to be loaded prior to libc
+(`LD_PRELOAD=/path/to/libfakeif.so.1`)
+* set the environment variable `HWADDR_<interface-name>` to whatever MAC address
+you want (note this MUST conform to the format `xx:xx:xx:xx:xx:xx`)
+* run your application normally
 
 If you don't set `$HWADDR_<interface-name>`, the actual MAC address returned by the
 real [`ioctl(2)`](https://linux.die.net/man/2/ioctl) call will be used
