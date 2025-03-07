@@ -41,7 +41,7 @@ $ FAKEIF_DEBUG=yesplease HWADDR_eth0=de:ad:be:ef:ca:fe LD_PRELOAD=/home/fred/lib
 SIOCGIFHWADDR intercepted
 Old MAC address 02:42:ac:1a:00:02
 Replacing original address 02:42:ac:1a:00:02 of eth0 with de:ad:be:ef:ca:fe
-New MAC address 02:4b:01:c0:d2:b1
+New MAC address de:ad:be:ef:ca:fe
 ioctl hooked: returns 0
 SIOCGIFHWADDR intercepted
 No override for eth1
